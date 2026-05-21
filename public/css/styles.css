@@ -18,7 +18,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Nunito Sans', 'Segoe UI', system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -28,14 +28,18 @@ body {
 a { color: var(--accent); }
 
 header {
-  background: linear-gradient(135deg, #1e3a5f, #0f172a);
-  border-bottom: 3px solid var(--accent);
+  background: linear-gradient(135deg, #1a4d7a 0%, #0f2744 55%, #1a1030 100%);
+  border-bottom: 4px solid var(--accent);
   padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 header h1 {
-  font-size: 1.5rem;
+  font-family: 'Fredoka', 'Nunito Sans', sans-serif;
+  font-size: 1.85rem;
   font-weight: 700;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
 }
 
 header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.25rem; }
@@ -49,13 +53,28 @@ nav.top-nav {
 
 nav.top-nav a {
   text-decoration: none;
-  font-size: 0.875rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  background: var(--surface2);
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
+  transition: transform 0.12s, background 0.12s, border-color 0.12s;
 }
 
-nav.top-nav a:hover { background: var(--border); }
+nav.top-nav a:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+nav.top-nav a.nav-active {
+  background: var(--accent);
+  border-color: #fcd34d;
+  color: #0f172a;
+}
 
 main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
 
@@ -68,9 +87,11 @@ main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
 }
 
 .card h2 {
-  font-size: 1.1rem;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.25rem;
   margin-bottom: 1rem;
   color: var(--accent);
+  letter-spacing: 0.02em;
 }
 
 .form-row {
@@ -106,12 +127,17 @@ input:focus, select:focus {
   display: inline-block;
   padding: 0.65rem 1.25rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
+  font-family: 'Fredoka', sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.12s;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .btn-primary { background: var(--accent); color: #0f172a; }
@@ -139,10 +165,13 @@ input:focus, select:focus {
 .division-section { margin-bottom: 2rem; }
 
 .division-header {
-  padding: 0.5rem 1rem;
-  border-radius: 8px 8px 0 0;
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-family: 'Fredoka', sans-serif;
+  padding: 0.55rem 1rem;
+  border-radius: 10px 10px 0 0;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .division-header.mc { background: var(--mc); color: white; }
@@ -160,10 +189,11 @@ input:focus, select:focus {
 }
 
 .round-label {
-  font-size: 0.75rem;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--muted);
+  letter-spacing: 0.06em;
+  color: var(--accent);
   margin-bottom: 0.75rem;
 }
 
@@ -199,7 +229,8 @@ input:focus, select:focus {
 
 .pick-option.selected {
   border-color: var(--accent);
-  background: rgba(245, 158, 11, 0.15);
+  background: rgba(245, 158, 11, 0.2);
+  font-weight: 700;
 }
 
 .pick-option input { width: auto; }

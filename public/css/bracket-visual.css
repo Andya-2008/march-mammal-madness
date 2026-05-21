@@ -24,8 +24,9 @@
 }
 
 .mmm-sheet-heading {
+  font-family: 'Fredoka', sans-serif;
   color: var(--accent);
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   margin-bottom: 0.25rem;
 }
 
@@ -48,13 +49,14 @@
 }
 
 .mmm-sheet {
-  background: #fff;
-  color: #111;
-  border: 2px solid #222;
-  border-radius: 4px;
+  font-family: 'Nunito Sans', 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, #fffef8 0%, #f8f4e8 100%);
+  color: #1a1a2e;
+  border: 3px solid #2d3748;
+  border-radius: 12px;
   padding: 1rem 0.75rem 1.25rem;
   min-width: 1100px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .mmm-bracket-layout {
@@ -91,20 +93,27 @@
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
-  font-weight: 800;
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.35rem 0.2rem;
-  color: #111;
-  border: 1px solid #ccc;
-  background: #f5f5f5;
+  padding: 0.5rem 0.25rem;
+  color: #fff;
+  border: none;
+  border-radius: 8px 0 0 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  max-width: 2rem;
+  max-width: 2.1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
+
+.mmm-region-mc .mmm-region-name { background: linear-gradient(180deg, #3b82f6, #1d4ed8); }
+.mmm-region-qss .mmm-region-name { background: linear-gradient(180deg, #06b6d4, #0e7490); }
+.mmm-region-wna .mmm-region-name { background: linear-gradient(180deg, #22c55e, #15803d); }
+.mmm-region-wnb .mmm-region-name { background: linear-gradient(180deg, #a855f7, #7e22ce); }
 
 .mmm-region-name-right {
   transform: rotate(0deg);
@@ -134,13 +143,16 @@
 }
 
 .mmm-round-label {
-  font-size: 0.55rem;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
   text-transform: uppercase;
   text-align: center;
-  color: #555;
-  padding: 0.2rem;
-  border-bottom: 1px solid #ddd;
-  background: #fafafa;
+  letter-spacing: 0.06em;
+  color: #475569;
+  padding: 0.3rem 0.15rem;
+  border-bottom: 2px solid #e2e8f0;
+  background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
   flex-shrink: 0;
 }
 
@@ -155,8 +167,13 @@
 
 .mmm-pair {
   position: relative;
-  margin: 0.08rem 0;
-  padding-right: 4px;
+  margin: 0.12rem 0.2rem;
+  padding-right: 6px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .mmm-side-right .mmm-pair {
@@ -188,12 +205,13 @@
 .mmm-line {
   display: flex;
   align-items: center;
-  gap: 0.2rem;
-  font-size: 0.62rem;
-  line-height: 1.25;
-  padding: 0.05rem 0.15rem;
-  border-bottom: 1px solid #e0e0e0;
-  min-height: 1.15rem;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.3;
+  padding: 0.2rem 0.35rem;
+  border-bottom: 1px solid #f1f5f9;
+  min-height: 1.35rem;
   white-space: nowrap;
 }
 
@@ -202,53 +220,83 @@
 }
 
 .mmm-seed {
-  font-weight: 700;
-  min-width: 1rem;
-  color: #333;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 0.62rem;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  line-height: 1.35rem;
+  text-align: center;
+  color: #fff;
+  background: #64748b;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
+
+.mmm-region-mc .mmm-seed { background: #3b82f6; }
+.mmm-region-qss .mmm-seed { background: #0891b2; }
+.mmm-region-wna .mmm-seed { background: #16a34a; }
+.mmm-region-wnb .mmm-seed { background: #9333ea; }
 
 .mmm-name {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #1e293b;
+}
+
+.mmm-line.mmm-winner {
+  background: linear-gradient(90deg, #fef2f2, #fff);
 }
 
 .mmm-line.mmm-winner .mmm-name {
-  color: #c0392b;
-  font-weight: 700;
+  color: #dc2626;
+  font-weight: 800;
+}
+
+.mmm-line.mmm-winner .mmm-seed {
+  background: #dc2626;
 }
 
 .mmm-center {
-  flex: 0 0 140px;
+  flex: 0 0 148px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 0 0.5rem;
-  border-left: 2px solid #222;
-  border-right: 2px solid #222;
-  background: #fafafa;
+  border-left: 3px solid #cbd5e1;
+  border-right: 3px solid #cbd5e1;
+  background: linear-gradient(180deg, #fffbeb, #fef3c7);
 }
 
 .mmm-center-title {
-  font-weight: 800;
-  font-size: 0.75rem;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #92400e;
   margin-bottom: 0.5rem;
 }
 
 .mmm-wildcard {
-  border: 1px solid #999;
-  padding: 0.35rem;
+  border: 2px solid #f59e0b;
+  border-radius: 8px;
+  padding: 0.4rem;
   margin-bottom: 0.75rem;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
 }
 
 .mmm-wc-title {
-  font-weight: 700;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
+  color: #b45309;
 }
 
 .mmm-center-finals {
@@ -259,21 +307,32 @@
 }
 
 .mmm-final-match {
-  border: 1px solid #999;
-  padding: 0.25rem;
-  font-size: 0.58rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.3rem;
+  font-size: 0.65rem;
+  background: #fff;
+  width: 100%;
 }
 
 .mmm-final-label {
-  font-weight: 700;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
   text-align: center;
-  font-size: 0.55rem;
-  margin-bottom: 0.15rem;
+  font-size: 0.58rem;
+  margin-bottom: 0.2rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .mmm-championship {
-  border-width: 2px;
-  border-color: #222;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+}
+
+.mmm-championship .mmm-final-label {
+  color: #b45309;
 }
 
 .mmm-scoring-key {
@@ -299,21 +358,23 @@
 /* Google search on white bracket */
 .mmm-sheet .btn-google {
   flex-shrink: 0;
-  border: 1px solid #999;
-  background: #eee;
-  color: #333;
-  border-radius: 3px;
+  border: none;
+  background: #e2e8f0;
+  color: #475569;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   line-height: 1;
-  padding: 0 0.25rem;
-  min-width: 1.1rem;
-  height: 1.1rem;
+  padding: 0 0.2rem;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  opacity: 0.85;
 }
 
 .mmm-sheet .btn-google:hover {
-  background: #fde68a;
-  border-color: #b45309;
+  background: #fbbf24;
+  color: #0f172a;
+  opacity: 1;
 }
 
 .btn-google {
