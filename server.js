@@ -11,6 +11,7 @@ const { getBracketBundle, bundleToApi, invalidateBracketCache } = require('./dat
 
 const app = express();
 const PORT = process.env.PORT || 3456;
+const VALID_GRADES = ['9', '10', '11', '12', 'Staff'];
 
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -87,9 +88,14 @@ app.post('/api/bracket/submit', async (req, res) => {
     }
 
     const bundle = await getBracketBundle(store);
-    const { firstName, lastName, period, picks } = req.body;
+    const { firstName, lastName, grade, period, picks } = req.body;
     if (!firstName?.trim() || !lastName?.trim()) {
       return res.status(400).json({ error: 'First and last name are required.' });
+    }
+
+    const gradeVal = (grade || period || '').trim();
+    if (!VALID_GRADES.includes(gradeVal)) {
+      return res.status(400).json({ error: 'Please select a valid grade: 9, 10, 11, 12, or Staff.' });
     }
 
     const cleanPicks = { ...picks };
@@ -100,7 +106,7 @@ app.post('/api/bracket/submit', async (req, res) => {
 
     const first = firstName.trim();
     const last = lastName.trim();
-    const per = period?.trim() || '';
+    const per = gradeVal;
     const picksJson = JSON.stringify(cleanPicks);
 
     const student = await store.findStudent(first, last, per);
@@ -191,6 +197,7 @@ app.get('/api/leaderboard', async (_req, res) => {
       firstName: row.first_name,
       lastName: row.last_name,
       period: row.period,
+      grade: row.period,
       score,
       maxScore: bundle.maxScore,
     };

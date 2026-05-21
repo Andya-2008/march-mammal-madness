@@ -21,7 +21,7 @@ function renderTable(data) {
     tr.innerHTML = `
       <td><span class="rank-badge">${row.rank}</span></td>
       <td>${escapeHtml(row.name)}</td>
-      <td>${escapeHtml(row.period || '—')}</td>
+      <td>${escapeHtml(row.period || row.grade || '—')}</td>
       <td><strong>${row.score}</strong> / ${row.maxScore}</td>
     `;
     tbody.appendChild(tr);
@@ -68,13 +68,13 @@ function downloadPdf() {
   const rows = leaderboardData.leaderboard.map((r) => [
     String(r.rank),
     r.name,
-    r.period || '—',
+    r.period || r.grade || '—',
     `${r.score} / ${r.maxScore}`,
   ]);
 
   doc.autoTable({
     startY: 85,
-    head: [['Rank', 'Name', 'Period', 'Score']],
+    head: [['Rank', 'Name', 'Grade', 'Score']],
     body: rows,
     styles: { fontSize: 9, cellPadding: 6 },
     headStyles: { fillColor: [30, 58, 95], textColor: 255 },

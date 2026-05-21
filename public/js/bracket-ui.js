@@ -79,10 +79,19 @@ function renderMatchCard(match, picks, teams, onPick) {
     nameSpan.textContent = t?.name || teamId;
 
     label.append(input, seedSpan, nameSpan);
+
+    if (t?.name && window.GoogleSearch) {
+      const wrap = document.createElement('span');
+      wrap.innerHTML = GoogleSearch.googleSearchButton(t.name);
+      const btn = wrap.firstElementChild;
+      if (btn) label.appendChild(btn);
+    }
+
     opts.appendChild(label);
   }
 
   div.appendChild(opts);
+  if (window.GoogleSearch) GoogleSearch.bindGoogleButtons(div);
   return div;
 }
 

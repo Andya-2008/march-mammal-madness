@@ -36,12 +36,19 @@
           <input id="lastName" required autocomplete="family-name">
         </div>
         <div>
-          <label for="period">Class / Period (optional)</label>
-          <input id="period" placeholder="e.g. Period 3">
+          <label for="grade">Grade *</label>
+          <select id="grade" required>
+            <option value="">Select grade…</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="Staff">Staff</option>
+          </select>
         </div>
       </div>
       <p style="color:var(--muted);font-size:0.85rem">
-        Use the same name and period if you need to update your bracket later.
+        Use the same name and grade if you need to update your bracket later.
       </p>
     </section>
 
@@ -52,9 +59,17 @@
       <p id="progressText" style="font-size:0.85rem;color:var(--muted)">0 of 64 matches picked</p>
     </section>
 
-    <div id="bracket-container"></div>
-
     <div id="visual-bracket"></div>
+
+    <section class="card">
+      <h2>Pick Winners (match by match)</h2>
+      <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">
+        Choose a winner for each match below. The full bracket above updates as you go.
+        Click <strong>⌕</strong> next to any name to search Google.
+      </p>
+    </section>
+
+    <div id="bracket-container"></div>
 
     <div class="sticky-footer no-print">
       <span id="footerStatus">Pick all 64 match winners to submit</span>
@@ -62,6 +77,7 @@
     </div>
   </main>
 
+  <script src="/js/google-search.js"></script>
   <script src="/js/bracket-ui.js"></script>
   <script src="/js/bracket-visual.js"></script>
   <script src="/js/student.js"></script>

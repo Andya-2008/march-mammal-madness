@@ -150,7 +150,11 @@ async function init() {
   submitBtn.addEventListener('click', async () => {
     const firstName = document.getElementById('firstName').value.trim();
     const lastName = document.getElementById('lastName').value.trim();
-    const period = document.getElementById('period').value.trim();
+    const grade = document.getElementById('grade').value;
+    if (!grade) {
+      showAlert('Please select your grade.');
+      return;
+    }
 
     if (!firstName || !lastName) {
       showAlert('Please enter your first and last name.');
@@ -164,7 +168,7 @@ async function init() {
       const res = await fetch('/api/bracket/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, period, picks }),
+        body: JSON.stringify({ firstName, lastName, grade, picks }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Submission failed');
