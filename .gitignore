@@ -1,0 +1,5 @@
+node_modules/
+data/mmm.db
+data/mmm.db-wal
+data/mmm.db-shm
+.env

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>March Mammal Madness — Leaderboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+  <header class="no-print">
+    <h1>Leaderboard</h1>
+    <p>Rankings based on actual March Mammal Madness results</p>
+    <nav class="top-nav">
+      <a href="/">Student Bracket</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+      <a href="/admin.html">Teacher Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="alert"></div>
+
+    <section class="card no-print">
+      <div class="actions">
+        <button class="btn btn-primary" id="refreshBtn">Refresh Rankings</button>
+        <button class="btn btn-secondary" id="pdfBtn" disabled>Download PDF</button>
+        <button class="btn btn-secondary" onclick="window.print()">Print Page</button>
+      </div>
+    </section>
+
+    <section class="card" id="print-section">
+      <h2 id="leaderboard-title">March Mammal Madness — Class Rankings</h2>
+      <p id="meta" style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem"></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Period</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="/js/leaderboard.js"></script>
+</body>
+</html>

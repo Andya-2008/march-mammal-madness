@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>March Mammal Madness — Submit Bracket</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>March Mammal Madness</h1>
+    <p>10th Annual (2013–2022) — Submit your bracket predictions</p>
+    <nav class="top-nav">
+      <a href="/">Student Bracket</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+      <a href="/admin.html">Teacher Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="alert"></div>
+    <div id="closed-banner" class="alert alert-info" style="display:none">
+      Submissions are currently closed. Contact your teacher if you need to update your bracket.
+    </div>
+
+    <section class="card">
+      <h2>Your Information</h2>
+      <div class="form-row">
+        <div>
+          <label for="firstName">First name *</label>
+          <input id="firstName" required autocomplete="given-name">
+        </div>
+        <div>
+          <label for="lastName">Last name *</label>
+          <input id="lastName" required autocomplete="family-name">
+        </div>
+        <div>
+          <label for="period">Class / Period (optional)</label>
+          <input id="period" placeholder="e.g. Period 3">
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:0.85rem">
+        Use the same name and period if you need to update your bracket later.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Scoring (max 138 points)</h2>
+      <p style="font-size:0.9rem;color:var(--muted)">
+        Wild Card: 1 pt · Round 1: 1 pt each · Sweet 16: 2 pts · Elite Trait: 3 pts ·
+        Final Roar: 5 pts · Semifinals: 8 pts · Champion: 13 pts
+      </p>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <p id="progressText" style="font-size:0.85rem;color:var(--muted)">0 of 64 matches picked</p>
+    </section>
+
+    <div id="bracket-container"></div>
+
+    <div class="sticky-footer no-print">
+      <span id="footerStatus">Pick all 64 match winners to submit</span>
+      <button class="btn btn-primary" id="submitBtn" disabled>Submit Bracket</button>
+    </div>
+  </main>
+
+  <script src="/js/bracket-ui.js"></script>
+  <script src="/js/student.js"></script>
+</body>
+</html>

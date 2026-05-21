@@ -1,0 +1,20 @@
+# Deploy on Render: https://render.com
+# 1. Push this repo to GitHub
+# 2. Render Dashboard → New → Blueprint → connect repo
+# 3. Or: New Web Service, connect repo, add DATABASE_URL from Neon (see DEPLOY.md)
+
+services:
+  - type: web
+    name: march-mammal-madness
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false

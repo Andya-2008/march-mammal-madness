@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>March Mammal Madness — Teacher Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Teacher Admin</h1>
+    <p>Enter actual winners and manage student submissions</p>
+    <nav class="top-nav">
+      <a href="/">Student Bracket</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+      <a href="/admin.html">Teacher Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="login-section" class="card admin-login">
+      <h2>Admin Login</h2>
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem">
+        Use the admin password your teacher set when the site was deployed.
+        (Local testing only: default is <code>mmm2026</code>.)
+      </p>
+      <label for="adminPassword">Password</label>
+      <input type="password" id="adminPassword" style="margin-bottom:1rem">
+      <button class="btn btn-primary" id="loginBtn">Log In</button>
+    </section>
+
+    <div id="admin-panel" style="display:none">
+      <div id="alert"></div>
+
+      <section class="card">
+        <h2>Dashboard</h2>
+        <p id="statsText" style="font-size:1.1rem"></p>
+        <div class="actions">
+          <button class="btn btn-secondary" id="toggleSubmissionsBtn">Toggle Submissions</button>
+          <a class="btn btn-primary" href="/leaderboard.html">View Leaderboard</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Actual Tournament Results</h2>
+        <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem">
+          Enter the real winners as March Mammal Madness progresses. Scores update automatically on the leaderboard.
+        </p>
+        <div id="admin-bracket"></div>
+        <div class="sticky-footer no-print">
+          <span id="adminProgress">0 results entered</span>
+          <button class="btn btn-primary" id="saveResultsBtn">Save Actual Results</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/js/bracket-ui.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
