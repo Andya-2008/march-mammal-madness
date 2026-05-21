@@ -444,6 +444,26 @@
   border-radius: 3px;
 }
 
+.setup-name-wc-slot:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  border-color: #cbd5e1;
+}
+
+.mmm-line-wc-slot {
+  background: #f8fafc;
+}
+
+.setup-field-error,
+#tournament-setup #cfg-title.setup-field-error,
+#tournament-setup #cfg-subtitle.setup-field-error,
+.setup-sheet .mmm-region-name-input.setup-field-error {
+  outline: 2px solid #ef4444 !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.35);
+}
+
 .mmm-region-name-input {
   writing-mode: vertical-rl;
   text-orientation: mixed;

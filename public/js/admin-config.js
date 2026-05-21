@@ -11,6 +11,15 @@ async function loadEditor(adminFetch, container, onSaved) {
   BracketSetupEditor.render(container, editorState);
 
   container.querySelector('#saveConfigBtn')?.addEventListener('click', async () => {
+    const setupHost = container.querySelector('#tournament-setup') || container;
+    const validation = BracketSetupEditor.validateSetup(setupHost);
+    if (!validation.ok) {
+      alert(validation.message);
+      validation.firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      validation.firstInvalid?.focus?.();
+      return;
+    }
+
     const payload = BracketSetupEditor.collectFromVisual(editorState);
     const btn = document.getElementById('saveConfigBtn');
     btn.disabled = true;
@@ -26,6 +35,10 @@ async function loadEditor(adminFetch, container, onSaved) {
       alert(saveData.message || 'Saved!');
     } catch (err) {
       alert(err.message);
+      const retry = BracketSetupEditor.validateSetup(setupHost);
+      if (!retry.ok) {
+        retry.firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     } finally {
       btn.disabled = false;
     }

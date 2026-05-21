@@ -313,6 +313,18 @@ function buildBracketFromConfig(rawConfig) {
   };
 }
 
+function seedsUsedInR1Pairings(pairings) {
+  const seeds = new Set();
+  for (const pair of pairings || []) {
+    for (const s of pair) {
+      if (s === WILD_CARD_PLACEHOLDER) continue;
+      const n = typeof s === 'number' ? s : parseInt(s, 10);
+      if (n >= 1 && n <= 16) seeds.add(n);
+    }
+  }
+  return seeds;
+}
+
 function validateConfigInput(raw) {
   const errors = [];
   if (!raw.title?.trim()) errors.push('Tournament title is required.');
@@ -325,9 +337,10 @@ function validateConfigInput(raw) {
     if (!div.name?.trim()) errors.push(`Division ${key}: name required.`);
     const teamList = div.teams || [];
     if (teamList.length !== 16) errors.push(`Division ${key}: need exactly 16 competitors (seeds 1–16).`);
-    const emptyNames = teamList.filter((t) => !t.name?.trim()).length;
-    if (emptyNames) errors.push(`Division ${key}: ${emptyNames} competitor name(s) still empty.`);
     const pairings = div.r1Pairings;
+    const usedSeeds = seedsUsedInR1Pairings(pairings);
+    const emptyNames = teamList.filter((t) => usedSeeds.has(t.seed) && !t.name?.trim()).length;
+    if (emptyNames) errors.push(`Division ${key}: ${emptyNames} competitor name(s) still empty.`);
     if (pairings && pairings.length !== 8) errors.push(`Division ${key}: need 8 Round 1 matchups.`);
   }
 
@@ -382,6 +395,7 @@ module.exports = {
   buildBracketFromConfig,
   normalizeConfig,
   validateConfigInput,
+  seedsUsedInR1Pairings,
   editorToStorageConfig,
   WILD_CARD_PLACEHOLDER,
   STANDARD_PAIRING_SEEDS,

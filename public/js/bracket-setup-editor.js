@@ -37,19 +37,27 @@ function seedSelect(div, match, slot, selected, allowWc) {
   return html;
 }
 
+function isWcSeed(seedVal) {
+  return seedVal === wc();
+}
+
 function editablePair(div, matchIndex, pair, divState, wildcard) {
   const wcDiv = wildcard?.enabled && wildcard.feedsDivision === div;
   const wcMatch = (wildcard?.feedsMatchIndex ?? 0) === matchIndex;
   const lines = [0, 1].map((slot) => {
     const seedVal = pair[slot];
     const allowWc = wcDiv && wcMatch && (wildcard.feedsSlot === 'team1' ? slot === 0 : slot === 1);
+    const wcSlot = isWcSeed(seedVal);
     const team = (divState.teams || []).find((t) => t.seed === seedVal || t.seed === parseInt(seedVal, 10));
-    const name = team?.name || '';
+    const name = wcSlot ? '' : team?.name || '';
+    const nameClass = `setup-name${wcSlot ? ' setup-name-wc-slot' : ''}`;
+    const disabled = wcSlot ? ' disabled' : '';
+    const placeholder = wcSlot ? 'Wild card slot' : 'Competitor name';
     return `
-      <div class="mmm-line mmm-line-edit">
+      <div class="mmm-line mmm-line-edit${wcSlot ? ' mmm-line-wc-slot' : ''}">
         ${seedSelect(div, matchIndex, slot, seedVal, allowWc)}
-        <input type="text" class="setup-name" data-div="${div}" data-match="${matchIndex}" data-slot="${slot}"
-          value="${name ? escapeAttr(name) : ''}" placeholder="Competitor name" autocomplete="off">
+        <input type="text" class="${nameClass}" data-div="${div}" data-match="${matchIndex}" data-slot="${slot}"
+          value="${name ? escapeAttr(name) : ''}" placeholder="${placeholder}" autocomplete="off"${disabled}>
       </div>`;
   });
   return `<div class="mmm-pair setup-pair" data-div="${div}" data-match="${matchIndex}">${lines.join('')}</div>`;
@@ -253,6 +261,95 @@ function render(host, editorState) {
     for (const key of DIV_KEYS) applyStandardPairings(key, editorState);
     render(host, editorState);
   });
+
+  bindSetupListeners(host);
 }
 
-window.BracketSetupEditor = { render, collectFromVisual, applyStandardPairings, DIV_KEYS };
+function clearSetupErrors(host) {
+  host?.querySelectorAll('.setup-field-error').forEach((el) => el.classList.remove('setup-field-error'));
+}
+
+function hostForSeed(seedEl, root = document) {
+  const { div, match, slot } = seedEl.dataset;
+  return root.querySelector(
+    `.setup-name[data-div="${div}"][data-match="${match}"][data-slot="${slot}"]`
+  );
+}
+
+function syncWcNameField(seedEl, root = document) {
+  const wild = wc();
+  const nameEl = hostForSeed(seedEl, root);
+  if (!nameEl) return;
+  const isWc = seedEl.value === wild;
+  nameEl.disabled = isWc;
+  nameEl.classList.toggle('setup-name-wc-slot', isWc);
+  nameEl.closest('.mmm-line-edit')?.classList.toggle('mmm-line-wc-slot', isWc);
+  if (isWc) {
+    nameEl.value = '';
+    nameEl.placeholder = 'Wild card slot';
+    nameEl.classList.remove('setup-field-error');
+  } else {
+    nameEl.placeholder = 'Competitor name';
+  }
+}
+
+function bindSetupListeners(host) {
+  const root = host || document;
+  root.querySelectorAll('.setup-name, .setup-div-name, #cfg-title').forEach((el) => {
+    el.addEventListener('input', () => el.classList.remove('setup-field-error'));
+  });
+  root.querySelectorAll('.setup-wc-name').forEach((el) => {
+    el.addEventListener('input', () => el.classList.remove('setup-field-error'));
+  });
+  root.querySelectorAll('.setup-seed').forEach((sel) => {
+    syncWcNameField(sel, root);
+    sel.addEventListener('change', () => syncWcNameField(sel, root));
+  });
+}
+
+function validateSetup(host) {
+  clearSetupErrors(host);
+  const wild = wc();
+  const problems = [];
+  let firstInvalid = null;
+
+  const mark = (el, label) => {
+    if (el) el.classList.add('setup-field-error');
+    problems.push(label);
+    if (!firstInvalid && el) firstInvalid = el;
+  };
+
+  const title = host.querySelector('#cfg-title');
+  if (!title?.value?.trim()) mark(title, 'Tournament title');
+
+  for (const key of DIV_KEYS) {
+    const divName = host.querySelector(`.setup-div-name[data-div="${key}"]`);
+    const divLabel = divName?.value?.trim() || key;
+    if (!divName?.value?.trim()) mark(divName, `${divLabel} division name`);
+
+    host.querySelectorAll(`.setup-seed[data-div="${key}"]`).forEach((seedEl) => {
+      if (seedEl.value === wild) return;
+      const nameEl = hostForSeed(seedEl, host);
+      if (!nameEl?.value?.trim()) {
+        mark(nameEl, `${divLabel}: seed ${seedEl.value} competitor name`);
+      }
+    });
+  }
+
+  const message =
+    problems.length === 0
+      ? ''
+      : `Please fill in ${problems.length} required field(s) (outlined in red):\n• ${problems.slice(0, 10).join('\n• ')}${
+          problems.length > 10 ? `\n• …and ${problems.length - 10} more` : ''
+        }`;
+
+  return { ok: problems.length === 0, message, firstInvalid };
+}
+
+window.BracketSetupEditor = {
+  render,
+  collectFromVisual,
+  applyStandardPairings,
+  validateSetup,
+  DIV_KEYS,
+};
