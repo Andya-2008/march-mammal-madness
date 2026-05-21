@@ -1,5 +1,13 @@
 let leaderboardData = [];
 
+function formatLeaderboardDate(d = new Date()) {
+  return d.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  });
+}
+
 const alertEl = document.getElementById('alert');
 const tbody = document.getElementById('leaderboard-body');
 const pdfBtn = document.getElementById('pdfBtn');
@@ -22,13 +30,12 @@ function renderTable(data) {
       <td><span class="rank-badge">${row.rank}</span></td>
       <td>${escapeHtml(row.name)}</td>
       <td>${escapeHtml(row.period || row.grade || '—')}</td>
-      <td><strong>${row.score}</strong> / ${row.maxScore}</td>
+      <td><strong>${row.score}</strong></td>
     `;
     tbody.appendChild(tr);
   }
 
-  const date = new Date().toLocaleString();
-  meta.textContent = `${data.studentCount} students · Max score: ${data.maxScore} · Updated ${date}`;
+  meta.textContent = formatLeaderboardDate();
 }
 
 function escapeHtml(s) {
@@ -59,17 +66,18 @@ function downloadPdf() {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });
 
   doc.setFontSize(18);
-  doc.text('March Mammal Madness — Class Rankings', 40, 50);
+  doc.setTextColor(0);
+  doc.text('Leaderboard', 40, 50);
 
-  doc.setFontSize(10);
-  doc.setTextColor(100);
-  doc.text(meta.textContent, 40, 68);
+  doc.setFontSize(11);
+  doc.setTextColor(80);
+  doc.text(formatLeaderboardDate(), 40, 68);
 
   const rows = leaderboardData.leaderboard.map((r) => [
     String(r.rank),
     r.name,
     r.period || r.grade || '—',
-    `${r.score} / ${r.maxScore}`,
+    String(r.score),
   ]);
 
   doc.autoTable({

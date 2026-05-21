@@ -364,8 +364,22 @@ tr:hover td { background: var(--surface2); }
   font-size: 0.8rem;
 }
 
+.leaderboard-date {
+  color: var(--muted);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+#leaderboard-title {
+  font-family: 'Fredoka', sans-serif;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
+}
+
 @media print {
   body { background: white; color: black; }
   header, nav, .no-print, .sticky-footer { display: none !important; }
   .card { border: 1px solid #ccc; break-inside: avoid; }
+  #print-section .leaderboard-date { color: #444; }
+  #leaderboard-title { color: #b45309; }
 }
