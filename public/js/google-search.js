@@ -1,7 +1,7 @@
 /** Open Google search for a competitor name */
 
 function googleSearchUrl(name) {
-  const q = encodeURIComponent(`${name} March Mammal Madness`);
+  const q = encodeURIComponent(`${name} animal`);
   return `https://www.google.com/search?q=${q}`;
 }
 
