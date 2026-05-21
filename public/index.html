@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>March Mammal Madness — Submit Bracket</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/bracket-visual.css">
 </head>
 <body>
   <header>
     <h1>March Mammal Madness</h1>
-    <p>10th Annual (2013–2022) — Submit your bracket predictions</p>
+    <p id="header-subtitle">Submit your bracket predictions</p>
     <nav class="top-nav">
       <a href="/">Student Bracket</a>
       <a href="/leaderboard.html">Leaderboard</a>
@@ -45,16 +46,15 @@
     </section>
 
     <section class="card">
-      <h2>Scoring (max 138 points)</h2>
-      <p style="font-size:0.9rem;color:var(--muted)">
-        Wild Card: 1 pt · Round 1: 1 pt each · Sweet 16: 2 pts · Elite Trait: 3 pts ·
-        Final Roar: 5 pts · Semifinals: 8 pts · Champion: 13 pts
-      </p>
+      <h2 id="scoring-title">Scoring</h2>
+      <p id="scoring-detail" style="font-size:0.9rem;color:var(--muted)"></p>
       <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
       <p id="progressText" style="font-size:0.85rem;color:var(--muted)">0 of 64 matches picked</p>
     </section>
 
     <div id="bracket-container"></div>
+
+    <div id="visual-bracket"></div>
 
     <div class="sticky-footer no-print">
       <span id="footerStatus">Pick all 64 match winners to submit</span>
@@ -63,6 +63,7 @@
   </main>
 
   <script src="/js/bracket-ui.js"></script>
+  <script src="/js/bracket-visual.js"></script>
   <script src="/js/student.js"></script>
 </body>
 </html>

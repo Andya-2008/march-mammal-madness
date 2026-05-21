@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>March Mammal Madness — Teacher Admin</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/bracket-visual.css">
 </head>
 <body>
   <header>
@@ -32,6 +33,16 @@
     <div id="admin-panel" style="display:none">
       <div id="alert"></div>
 
+      <nav class="admin-tabs">
+        <button type="button" class="admin-tab active" data-tab="setup">Tournament Setup</button>
+        <button type="button" class="admin-tab" data-tab="results">Enter Results</button>
+      </nav>
+
+      <div id="tab-setup">
+        <div id="config-editor-host"></div>
+      </div>
+
+      <div id="tab-results" style="display:none">
       <section class="card">
         <h2>Dashboard</h2>
         <p id="statsText" style="font-size:1.1rem"></p>
@@ -52,10 +63,15 @@
           <button class="btn btn-primary" id="saveResultsBtn">Save Actual Results</button>
         </div>
       </section>
+
+      <div id="visual-bracket-admin"></div>
+      </div>
     </div>
   </main>
 
   <script src="/js/bracket-ui.js"></script>
+  <script src="/js/bracket-visual.js"></script>
+  <script src="/js/admin-config.js"></script>
   <script src="/js/admin.js"></script>
 </body>
 </html>

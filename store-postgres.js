@@ -38,6 +38,12 @@ async function init() {
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS tournament_config (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      config JSONB NOT NULL,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
   `);
 
   const defaultAdminPassword = process.env.ADMIN_PASSWORD || 'mmm2026';
@@ -189,6 +195,23 @@ async function deleteStudent(id) {
   await pool.query('DELETE FROM students WHERE id = $1', [id]);
 }
 
+async function getTournamentConfig() {
+  const { rows } = await pool.query('SELECT config FROM tournament_config WHERE id = 1');
+  if (!rows[0]) return null;
+  return rows[0].config;
+}
+
+async function saveTournamentConfig(config) {
+  const { rows } = await pool.query('SELECT id FROM tournament_config WHERE id = 1');
+  if (rows.length) {
+    await pool.query('UPDATE tournament_config SET config = $1, updated_at = NOW() WHERE id = 1', [
+      config,
+    ]);
+  } else {
+    await pool.query('INSERT INTO tournament_config (id, config) VALUES (1, $1)', [config]);
+  }
+}
+
 module.exports = {
   init,
   getSetting,
@@ -204,5 +227,7 @@ module.exports = {
   getAllBrackets,
   getAllBracketsForExport,
   deleteStudent,
+  getTournamentConfig,
+  saveTournamentConfig,
   storageLabel: 'PostgreSQL (cloud)',
 };

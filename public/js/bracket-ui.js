@@ -1,5 +1,7 @@
 /** Shared bracket UI helpers */
 
+const WC = '__wild_card_winner__';
+
 function teamLabel(teamId, teams) {
   const t = teams[teamId];
   if (!t) return teamId;
@@ -20,7 +22,7 @@ function resolveParticipantsClient(match, picks, teams) {
   const parts = [];
   for (const slot of [match.team1, match.team2]) {
     if (!slot) continue;
-    if (slot === 'wild-card-winner') {
+    if (slot === WC || slot === 'wild-card-winner') {
       if (!picks.wildcard) return null;
       parts.push(picks.wildcard);
     } else {
@@ -111,7 +113,7 @@ function clearDownstreamPicks(changedMatchId, picks, matches) {
         feedsMap[req].push(m.id);
       }
     }
-    if (m.team1 === 'wild-card-winner' || m.team2 === 'wild-card-winner') {
+    if (m.team1 === WC || m.team2 === WC || m.team1 === 'wild-card-winner' || m.team2 === 'wild-card-winner') {
       if (!feedsMap.wildcard) feedsMap.wildcard = [];
       feedsMap.wildcard.push(m.id);
     }
@@ -132,6 +134,7 @@ function clearDownstreamPicks(changedMatchId, picks, matches) {
 }
 
 window.BracketUI = {
+  WC,
   teamLabel,
   resolveParticipantsClient,
   isMatchReadyClient,

@@ -6,6 +6,8 @@ const loginSection = document.getElementById('login-section');
 const adminPanel = document.getElementById('admin-panel');
 const alertEl = document.getElementById('alert');
 const container = document.getElementById('admin-bracket');
+const visualHost = document.getElementById('visual-bracket-admin');
+const configHost = document.getElementById('config-editor-host');
 
 function showAlert(msg, type = 'error') {
   alertEl.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
@@ -19,7 +21,17 @@ function adminFetch(url, options = {}) {
       'Content-Type': 'application/json',
       'X-Admin-Password': adminPassword,
     },
+    body: options.body,
   });
+}
+
+function divisionKeys() {
+  return bracketData?.divisionOrder || ['mc', 'qss', 'wna', 'wnb'];
+}
+
+async function reloadBracketData() {
+  const bracketRes = await fetch('/api/bracket');
+  bracketData = await bracketRes.json();
 }
 
 function onActualPick(matchId, teamId) {
@@ -38,22 +50,24 @@ function renderAdminBracket() {
     card.className = 'card';
     card.innerHTML = `<h2>${title}</h2>`;
     for (const m of matchList) {
-      card.appendChild(
-        BracketUI.renderMatchCard(m, actualPicks, teams, onActualPick)
-      );
+      card.appendChild(BracketUI.renderMatchCard(m, actualPicks, teams, onActualPick));
     }
     container.appendChild(card);
   }
 
   addSection('Wild Card', groups.wildcard);
-  for (const key of ['mc', 'qss', 'wna', 'wnb']) {
-    addSection(divisions[key].name, groups[key]);
+  for (const key of divisionKeys()) {
+    if (divisions[key]) addSection(divisions[key].name, groups[key] || []);
   }
   addSection('Final Four & Championship', groups.finals);
 
   const entered = Object.keys(actualPicks).filter((k) => actualPicks[k]).length;
   document.getElementById('adminProgress').textContent =
     `${entered} of ${matches.length} results entered`;
+
+  if (visualHost) {
+    BracketVisual.render(visualHost, bracketData, actualPicks);
+  }
 }
 
 async function loadStats() {
@@ -73,6 +87,18 @@ async function loadStats() {
   }
 }
 
+function setupTabs() {
+  document.querySelectorAll('.admin-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.admin-tab').forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      const isSetup = tab.dataset.tab === 'setup';
+      document.getElementById('tab-setup').style.display = isSetup ? 'block' : 'none';
+      document.getElementById('tab-results').style.display = isSetup ? 'none' : 'block';
+    });
+  });
+}
+
 document.getElementById('loginBtn').addEventListener('click', async () => {
   adminPassword = document.getElementById('adminPassword').value;
   try {
@@ -83,11 +109,17 @@ document.getElementById('loginBtn').addEventListener('click', async () => {
     }
     loginSection.style.display = 'none';
     adminPanel.style.display = 'block';
+    setupTabs();
 
-    const bracketRes = await fetch('/api/bracket');
-    bracketData = await bracketRes.json();
+    await reloadBracketData();
     await loadStats();
     renderAdminBracket();
+
+    await AdminConfig.loadEditor(adminFetch, configHost, async () => {
+      await reloadBracketData();
+      renderAdminBracket();
+      showAlert('Tournament updated. Reload pick forms below if needed.', 'success');
+    });
   } catch (e) {
     showAlert(e.message);
   }
@@ -117,6 +149,7 @@ document.getElementById('saveResultsBtn').addEventListener('click', async () => 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
     showAlert(`Saved ${data.matchCount} match results. Leaderboard will update.`, 'success');
+    renderAdminBracket();
   } catch (e) {
     showAlert(e.message);
   } finally {

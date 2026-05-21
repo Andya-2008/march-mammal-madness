@@ -3,6 +3,7 @@ let bracketData = null;
 
 const alertEl = document.getElementById('alert');
 const container = document.getElementById('bracket-container');
+const visualHost = document.getElementById('visual-bracket');
 const submitBtn = document.getElementById('submitBtn');
 const progressFill = document.getElementById('progressFill');
 const progressText = document.getElementById('progressText');
@@ -11,6 +12,10 @@ const footerStatus = document.getElementById('footerStatus');
 function showAlert(msg, type = 'error') {
   alertEl.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
   alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function divisionKeys() {
+  return bracketData?.divisionOrder || ['mc', 'qss', 'wna', 'wnb'];
 }
 
 function onPick(matchId, teamId) {
@@ -50,9 +55,7 @@ function renderDivision(divKey, divName, cssClass, matchList) {
     group.appendChild(label);
 
     for (const m of matches) {
-      group.appendChild(
-        BracketUI.renderMatchCard(m, picks, bracketData.teams, onPick)
-      );
+      group.appendChild(BracketUI.renderMatchCard(m, picks, bracketData.teams, onPick));
     }
     section.appendChild(group);
   }
@@ -62,7 +65,7 @@ function renderDivision(divKey, divName, cssClass, matchList) {
 
 function renderBracket() {
   container.innerHTML = '';
-  const { matches, teams, divisions } = bracketData;
+  const { matches, teams, divisions, roundPoints, maxScore } = bracketData;
   const groups = BracketUI.groupMatchesByDivision(matches);
 
   const wcSection = document.createElement('section');
@@ -71,12 +74,14 @@ function renderBracket() {
   for (const m of groups.wildcard) {
     wcSection.appendChild(BracketUI.renderMatchCard(m, picks, teams, onPick));
   }
-  container.appendChild(wcSection);
+  if (groups.wildcard.length) container.appendChild(wcSection);
 
-  for (const key of ['mc', 'qss', 'wna', 'wnb']) {
-    container.appendChild(
-      renderDivision(key, divisions[key].name, key, groups[key])
-    );
+  for (const key of divisionKeys()) {
+    if (divisions[key]) {
+      container.appendChild(
+        renderDivision(key, divisions[key].name, key, groups[key] || [])
+      );
+    }
   }
 
   const finalsSection = document.createElement('section');
@@ -89,15 +94,25 @@ function renderBracket() {
 
   const total = matches.length;
   const done = BracketUI.countCompletedPicks(picks, matches, teams);
-  const allPicked = done === total && Object.keys(picks).length >= total;
+  const pickedCount = Object.keys(picks).filter((k) => picks[k]).length;
+  const allPicked = pickedCount >= total && done === total;
 
-  progressFill.style.width = `${(done / total) * 100}%`;
-  progressText.textContent = `${Object.keys(picks).filter((k) => picks[k]).length} of ${total} matches picked`;
+  progressFill.style.width = `${(pickedCount / total) * 100}%`;
+  progressText.textContent = `${pickedCount} of ${total} matches picked`;
 
   submitBtn.disabled = !allPicked;
   footerStatus.textContent = allPicked
     ? 'Ready to submit!'
-    : `Pick winners for all unlocked matches (${done}/${total} ready)`;
+    : `Pick winners for all unlocked matches (${pickedCount}/${total})`;
+
+  if (visualHost) {
+    BracketVisual.render(visualHost, bracketData, picks);
+  }
+}
+
+function formatScoring(roundPoints, maxScore) {
+  const rp = roundPoints || {};
+  return `Wild Card: ${rp.wildcard ?? 1} pt · Round 1: ${rp.r1 ?? 1} each · Sweet 16: ${rp.r2 ?? 2} · Elite Trait: ${rp.r3 ?? 3} · Final Roar: ${rp.r4 ?? 5} · Semifinals: ${rp.r5 ?? 8} · Champion: ${rp.championship ?? 13} (max ${maxScore})`;
 }
 
 async function init() {
@@ -108,6 +123,22 @@ async function init() {
 
   bracketData = await bracketRes.json();
   const settings = await settingsRes.json();
+
+  if (bracketData.title) {
+    document.querySelector('header h1').textContent = bracketData.title;
+  }
+  const sub = document.getElementById('header-subtitle');
+  if (sub) {
+    sub.textContent = bracketData.subtitle || 'Submit your bracket predictions';
+  }
+  const scoringTitle = document.getElementById('scoring-title');
+  if (scoringTitle) {
+    scoringTitle.textContent = `Scoring (max ${bracketData.maxScore} points)`;
+  }
+  const scoringP = document.getElementById('scoring-detail');
+  if (scoringP && bracketData.roundPoints) {
+    scoringP.textContent = formatScoring(bracketData.roundPoints, bracketData.maxScore);
+  }
 
   if (!settings.submissionsOpen) {
     document.getElementById('closed-banner').style.display = 'block';
