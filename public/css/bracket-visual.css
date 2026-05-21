@@ -348,6 +348,102 @@
   margin-left: 0.35rem;
 }
 
+/* Teacher setup editor */
+.setup-sheet .mmm-line-edit {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.1rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.setup-sheet .setup-seed {
+  width: 2.5rem;
+  font-size: 0.65rem;
+  padding: 0.15rem;
+  border: 1px solid #999;
+  border-radius: 3px;
+}
+
+.setup-sheet .setup-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.65rem;
+  padding: 0.2rem 0.3rem;
+  border: 1px solid #999;
+  border-radius: 3px;
+}
+
+.mmm-region-name-input {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-weight: 800;
+  font-size: 0.65rem;
+  width: 2rem;
+  min-height: 8rem;
+  border: 1px solid #999;
+  padding: 0.25rem;
+  text-align: center;
+  background: #fffde7;
+}
+
+.mmm-wing-right .mmm-region-name-input {
+  transform: rotate(0deg);
+}
+
+.mmm-round-editable {
+  background: #fffde7;
+}
+
+.mmm-round-placeholder .mmm-placeholder-note {
+  font-size: 0.55rem;
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0.25rem;
+}
+
+.setup-center-hint {
+  font-size: 0.6rem;
+  color: #444;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  max-width: 140px;
+}
+
+.setup-wc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  font-size: 0.55rem;
+  margin-top: 0.35rem;
+}
+
+.setup-wc-meta-sel {
+  font-size: 0.55rem;
+  padding: 0.15rem;
+}
+
+.setup-bracket-host {
+  border: 2px solid var(--accent) !important;
+}
+
+/* Click to pick winners (teacher results) */
+.mmm-line-clickable {
+  cursor: pointer;
+}
+
+.mmm-line-clickable:hover {
+  background: #fff3cd !important;
+  outline: 1px solid #f59e0b;
+}
+
+.mmm-pair-pickable .mmm-line-clickable.mmm-winner {
+  background: rgba(192, 57, 43, 0.2) !important;
+}
+
 .bracket-jump {
   display: inline-block;
   margin-bottom: 1rem;

@@ -52,22 +52,23 @@
         </div>
       </section>
 
-      <section class="card">
-        <h2>Actual Tournament Results</h2>
+      <section class="visual-bracket-wrapper card">
+        <h2 style="color:var(--accent)">Enter Winners on the Bracket</h2>
         <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem">
-          Enter the real winners as March Mammal Madness progresses. Scores update automatically on the leaderboard.
+          Click the real winner for each match as results are announced. The bracket updates automatically.
+          You can also use the list view below.
         </p>
-        <div id="admin-bracket"></div>
-        <div class="sticky-footer no-print">
-          <span id="adminProgress">0 results entered</span>
+        <div id="visual-bracket-admin"></div>
+        <div class="actions" style="margin-top:1rem">
+          <span id="adminProgress" style="margin-right:1rem">0 results entered</span>
           <button class="btn btn-primary" id="saveResultsBtn">Save Actual Results</button>
         </div>
       </section>
 
-      <section class="visual-bracket-wrapper card" style="margin-top:2rem">
-        <h2 style="color:var(--accent)">Full Bracket Preview</h2>
-        <div id="visual-bracket-admin"></div>
-      </section>
+      <details class="card" style="margin-top:1rem">
+        <summary style="cursor:pointer;font-weight:600;color:var(--accent)">List view (optional)</summary>
+        <div id="admin-bracket" style="margin-top:1rem"></div>
+      </details>
       </div>
     </div>
   </main>
@@ -75,6 +76,7 @@
   <script src="/js/google-search.js"></script>
   <script src="/js/bracket-ui.js"></script>
   <script src="/js/bracket-visual.js"></script>
+  <script src="/js/bracket-setup-editor.js"></script>
   <script src="/js/admin-config.js"></script>
   <script src="/js/admin.js"></script>
 </body>

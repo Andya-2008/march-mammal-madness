@@ -35,24 +35,35 @@ function slotForMatch(match, slot, picks, teams) {
   return { name: 'TBD', seed: '—', id: null };
 }
 
-function teamLine(team, isWinner, matchId) {
+function teamLine(team, isWinner, matchId, pickOpts) {
   const gBtn = window.GoogleSearch?.googleSearchButton(team.name) || '';
+  const clickable =
+    pickOpts?.onPick && team.id && team.name !== 'TBD' && matchId
+      ? ' mmm-line-clickable'
+      : '';
+  const dataPick =
+    pickOpts?.onPick && team.id
+      ? ` data-pick-match="${matchId}" data-pick-team="${team.id}"`
+      : '';
   return `
-    <div class="mmm-line ${isWinner ? 'mmm-winner' : ''}" data-match-id="${matchId || ''}">
+    <div class="mmm-line ${isWinner ? 'mmm-winner' : ''}${clickable}" data-match-id="${matchId || ''}"${dataPick} role="${clickable ? 'button' : 'none'}" tabindex="${clickable ? '0' : '-1'}">
       <span class="mmm-seed">${escapeHtml(String(team.seed))}</span>
       <span class="mmm-name">${escapeHtml(team.name)}</span>
       ${gBtn}
     </div>`;
 }
 
-function matchPairHtml(match, picks, teams) {
+function matchPairHtml(match, picks, teams, pickOpts) {
   const t1 = slotForMatch(match, 'team1', picks, teams);
   const t2 = slotForMatch(match, 'team2', picks, teams);
   const w = picks[match.id];
+  const ready = window.BracketUI?.resolveParticipantsClient(match, picks, teams)?.length === 2;
+  const canPick = pickOpts?.onPick && ready;
+  const opts = canPick ? pickOpts : null;
   return `
-    <div class="mmm-pair" data-match-id="${match.id}">
-      ${teamLine(t1, w && t1.id === w, match.id)}
-      ${teamLine(t2, w && t2.id === w, match.id)}
+    <div class="mmm-pair ${canPick ? 'mmm-pair-pickable' : ''}" data-match-id="${match.id}">
+      ${teamLine(t1, w && t1.id === w, match.id, opts)}
+      ${teamLine(t2, w && t2.id === w, match.id, opts)}
     </div>`;
 }
 
@@ -66,7 +77,7 @@ function getRoundMatches(matches, divKey, round) {
     });
 }
 
-function renderRegionColumn(matches, divKey, picks, teams, side) {
+function renderRegionColumn(matches, divKey, picks, teams, side, pickOpts) {
   const r1 = getRoundMatches(matches, divKey, 'r1');
   const r2 = getRoundMatches(matches, divKey, 'r2');
   const r3 = getRoundMatches(matches, divKey, 'r3');
@@ -76,7 +87,7 @@ function renderRegionColumn(matches, divKey, picks, teams, side) {
     <div class="mmm-round" style="--rows:${rows}">
       <div class="mmm-round-label">${label}</div>
       <div class="mmm-round-matches">
-        ${list.map((m) => matchPairHtml(m, picks, teams)).join('')}
+        ${list.map((m) => matchPairHtml(m, picks, teams, pickOpts)).join('')}
       </div>
     </div>`;
 
@@ -98,15 +109,15 @@ function renderRegionColumn(matches, divKey, picks, teams, side) {
   return `<div class="mmm-region-cols mmm-side-${side}">${order.join('')}</div>`;
 }
 
-function renderRegion(divKey, divName, matches, picks, teams, side) {
+function renderRegion(divKey, divName, matches, picks, teams, side, pickOpts) {
   return `
     <div class="mmm-region mmm-region-${divKey}">
       <div class="mmm-region-name mmm-region-name-${side}">${escapeHtml(divName)}</div>
-      ${renderRegionColumn(matches, divKey, picks, teams, side)}
+      ${renderRegionColumn(matches, divKey, picks, teams, side, pickOpts)}
     </div>`;
 }
 
-function renderCenter(matches, picks, teams, wildcard, roundPoints, maxScore) {
+function renderCenter(matches, picks, teams, wildcard, roundPoints, maxScore, pickOpts) {
   const wc = matches.find((m) => m.id === 'wildcard');
   const left = matches.find((m) => m.id === 'r5-left');
   const right = matches.find((m) => m.id === 'r5-right');
@@ -117,7 +128,7 @@ function renderCenter(matches, picks, teams, wildcard, roundPoints, maxScore) {
     wcHtml = `
       <div class="mmm-wildcard">
         <div class="mmm-wc-title">Wild Card</div>
-        ${matchPairHtml(wc, picks, teams)}
+        ${matchPairHtml(wc, picks, teams, pickOpts)}
       </div>`;
   }
 
@@ -127,9 +138,9 @@ function renderCenter(matches, picks, teams, wildcard, roundPoints, maxScore) {
       <div class="mmm-center-title">${escapeHtml('Championship')}</div>
       ${wcHtml}
       <div class="mmm-center-finals">
-        ${left ? `<div class="mmm-final-match"><div class="mmm-final-label">Semifinal (Left)</div>${matchPairHtml(left, picks, teams)}</div>` : ''}
-        ${champ ? `<div class="mmm-final-match mmm-championship"><div class="mmm-final-label">Champion</div>${matchPairHtml(champ, picks, teams)}</div>` : ''}
-        ${right ? `<div class="mmm-final-match"><div class="mmm-final-label">Semifinal (Right)</div>${matchPairHtml(right, picks, teams)}</div>` : ''}
+        ${left ? `<div class="mmm-final-match"><div class="mmm-final-label">Semifinal (Left)</div>${matchPairHtml(left, picks, teams, pickOpts)}</div>` : ''}
+        ${champ ? `<div class="mmm-final-match mmm-championship"><div class="mmm-final-label">Champion</div>${matchPairHtml(champ, picks, teams, pickOpts)}</div>` : ''}
+        ${right ? `<div class="mmm-final-match"><div class="mmm-final-label">Semifinal (Right)</div>${matchPairHtml(right, picks, teams, pickOpts)}</div>` : ''}
       </div>
       <div class="mmm-scoring-key">
         <div class="mmm-scoring-title">Scoring</div>
@@ -145,7 +156,7 @@ function renderCenter(matches, picks, teams, wildcard, roundPoints, maxScore) {
     </div>`;
 }
 
-function render(container, bracketData, picks) {
+function render(container, bracketData, picks, options = {}) {
   if (!container || !bracketData) return;
   const {
     matches,
@@ -160,22 +171,29 @@ function render(container, bracketData, picks) {
   } = bracketData;
   const order = divisionOrder || ['mc', 'qss', 'wna', 'wnb'];
   const p = picks || {};
+  const pickOpts = options.onPick ? { onPick: options.onPick } : null;
+  const heading = options.heading || title || 'March Mammal Madness';
+  const sub = options.subtitle
+    ? options.subtitle
+    : pickOpts
+      ? 'Click a competitor to mark the real winner · Red = selected'
+      : `${subtitle || 'Your bracket preview'} · <span class="mmm-winner-legend">Red</span> = your picked winner`;
 
   container.innerHTML = `
     <section class="mmm-sheet-section" id="full-bracket-view">
-      <h2 class="mmm-sheet-heading">${escapeHtml(title || 'March Mammal Madness')}</h2>
-      <p class="mmm-sheet-sub">${escapeHtml(subtitle || 'Your bracket preview')} · <span class="mmm-winner-legend">Red</span> = your picked winner</p>
+      <h2 class="mmm-sheet-heading">${escapeHtml(heading)}</h2>
+      <p class="mmm-sheet-sub">${sub}</p>
       <div class="mmm-sheet-scroll">
         <div class="mmm-sheet">
           <div class="mmm-bracket-layout">
             <div class="mmm-wing mmm-wing-left">
-              ${renderRegion(order[0], divisions[order[0]]?.name, matches, p, teams, 'left')}
-              ${renderRegion(order[2], divisions[order[2]]?.name, matches, p, teams, 'left')}
+              ${renderRegion(order[0], divisions[order[0]]?.name, matches, p, teams, 'left', pickOpts)}
+              ${renderRegion(order[2], divisions[order[2]]?.name, matches, p, teams, 'left', pickOpts)}
             </div>
-            ${renderCenter(matches, p, teams, wildcard, roundPoints, maxScore)}
+            ${renderCenter(matches, p, teams, wildcard, roundPoints, maxScore, pickOpts)}
             <div class="mmm-wing mmm-wing-right">
-              ${renderRegion(order[1], divisions[order[1]]?.name, matches, p, teams, 'right')}
-              ${renderRegion(order[3], divisions[order[3]]?.name, matches, p, teams, 'right')}
+              ${renderRegion(order[1], divisions[order[1]]?.name, matches, p, teams, 'right', pickOpts)}
+              ${renderRegion(order[3], divisions[order[3]]?.name, matches, p, teams, 'right', pickOpts)}
             </div>
           </div>
         </div>
@@ -183,6 +201,23 @@ function render(container, bracketData, picks) {
     </section>`;
 
   if (window.GoogleSearch) GoogleSearch.bindGoogleButtons(container);
+
+  if (pickOpts?.onPick) {
+    container.querySelectorAll('.mmm-line-clickable').forEach((line) => {
+      line.addEventListener('click', (ev) => {
+        if (ev.target.closest('.btn-google')) return;
+        const matchId = line.dataset.pickMatch;
+        const teamId = line.dataset.pickTeam;
+        if (matchId && teamId) pickOpts.onPick(matchId, teamId);
+      });
+      line.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          line.click();
+        }
+      });
+    });
+  }
 }
 
 window.BracketVisual = { render };

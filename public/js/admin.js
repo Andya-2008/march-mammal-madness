@@ -37,7 +37,23 @@ async function reloadBracketData() {
 function onActualPick(matchId, teamId) {
   actualPicks[matchId] = teamId;
   BracketUI.clearDownstreamPicks(matchId, actualPicks, bracketData.matches);
+  renderAllAdminViews();
+}
+
+function renderAllAdminViews() {
   renderAdminBracket();
+  renderAdminVisual();
+}
+
+function renderAdminVisual() {
+  if (!visualHost || !bracketData) return;
+  BracketVisual.render(visualHost, bracketData, actualPicks, {
+    heading: 'Actual Results — click winners',
+    onPick: onActualPick,
+  });
+  const entered = Object.keys(actualPicks).filter((k) => actualPicks[k]).length;
+  const el = document.getElementById('adminProgress');
+  if (el) el.textContent = `${entered} of ${bracketData.matches.length} results entered`;
 }
 
 function renderAdminBracket() {
@@ -61,13 +77,7 @@ function renderAdminBracket() {
   }
   addSection('Final Four & Championship', groups.finals);
 
-  const entered = Object.keys(actualPicks).filter((k) => actualPicks[k]).length;
-  document.getElementById('adminProgress').textContent =
-    `${entered} of ${matches.length} results entered`;
-
-  if (visualHost) {
-    BracketVisual.render(visualHost, bracketData, actualPicks);
-  }
+  renderAdminVisual();
 }
 
 async function loadStats() {
@@ -113,12 +123,12 @@ document.getElementById('loginBtn').addEventListener('click', async () => {
 
     await reloadBracketData();
     await loadStats();
-    renderAdminBracket();
+    renderAllAdminViews();
 
     await AdminConfig.loadEditor(adminFetch, configHost, async () => {
       await reloadBracketData();
-      renderAdminBracket();
-      showAlert('Tournament updated. Reload pick forms below if needed.', 'success');
+      renderAllAdminViews();
+      showAlert('Tournament updated.', 'success');
     });
   } catch (e) {
     showAlert(e.message);
@@ -149,7 +159,7 @@ document.getElementById('saveResultsBtn').addEventListener('click', async () => 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
     showAlert(`Saved ${data.matchCount} match results. Leaderboard will update.`, 'success');
-    renderAdminBracket();
+    renderAllAdminViews();
   } catch (e) {
     showAlert(e.message);
   } finally {
