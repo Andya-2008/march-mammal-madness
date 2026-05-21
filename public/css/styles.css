@@ -389,4 +389,8 @@ tr:hover td { background: var(--surface2); }
   .card { border: 1px solid #ccc; break-inside: avoid; }
   #print-section .leaderboard-date { color: #444; }
   #leaderboard-title { color: #b45309; }
+  /* Do not repeat Rank/Name/Grade/Score on every printed page */
+  #print-section thead {
+    display: table-row-group;
+  }
 }
