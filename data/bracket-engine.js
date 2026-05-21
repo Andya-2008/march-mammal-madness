@@ -325,6 +325,8 @@ function validateConfigInput(raw) {
     if (!div.name?.trim()) errors.push(`Division ${key}: name required.`);
     const teamList = div.teams || [];
     if (teamList.length !== 16) errors.push(`Division ${key}: need exactly 16 competitors (seeds 1–16).`);
+    const emptyNames = teamList.filter((t) => !t.name?.trim()).length;
+    if (emptyNames) errors.push(`Division ${key}: ${emptyNames} competitor name(s) still empty.`);
     const pairings = div.r1Pairings;
     if (pairings && pairings.length !== 8) errors.push(`Division ${key}: need 8 Round 1 matchups.`);
   }

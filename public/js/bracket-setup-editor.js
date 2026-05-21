@@ -49,7 +49,7 @@ function editablePair(div, matchIndex, pair, divState, wildcard) {
       <div class="mmm-line mmm-line-edit">
         ${seedSelect(div, matchIndex, slot, seedVal, allowWc)}
         <input type="text" class="setup-name" data-div="${div}" data-match="${matchIndex}" data-slot="${slot}"
-          value="${escapeAttr(name)}" placeholder="Competitor name" autocomplete="off">
+          value="${name ? escapeAttr(name) : ''}" placeholder="Competitor name" autocomplete="off">
       </div>`;
   });
   return `<div class="mmm-pair setup-pair" data-div="${div}" data-match="${matchIndex}">${lines.join('')}</div>`;
@@ -75,7 +75,7 @@ function renderRegionSetup(divKey, divState, side, wildcard) {
   return `
     <div class="mmm-region mmm-region-${divKey} setup-region">
       <input type="text" class="setup-div-name mmm-region-name-input" data-div="${divKey}"
-        value="${escapeAttr(divState.name)}" title="Division name">
+        value="${divState.name ? escapeAttr(divState.name) : ''}" placeholder="Division name" title="Division name">
       <div class="mmm-region-cols mmm-side-${side}">${cols.join('')}</div>
     </div>`;
 }
@@ -91,11 +91,11 @@ function renderSetupSheet(editorState) {
       <div class="mmm-pair">
         <div class="mmm-line mmm-line-edit">
           <span class="mmm-seed">A</span>
-          <input type="text" class="setup-wc-name" data-wc="1" value="${escapeAttr(e.wildcard.team1?.name || '')}" placeholder="Competitor A">
+          <input type="text" class="setup-wc-name" data-wc="1" value="${e.wildcard.team1?.name ? escapeAttr(e.wildcard.team1.name) : ''}" placeholder="Competitor A">
         </div>
         <div class="mmm-line mmm-line-edit">
           <span class="mmm-seed">B</span>
-          <input type="text" class="setup-wc-name" data-wc="2" value="${escapeAttr(e.wildcard.team2?.name || '')}" placeholder="Competitor B">
+          <input type="text" class="setup-wc-name" data-wc="2" value="${e.wildcard.team2?.name ? escapeAttr(e.wildcard.team2.name) : ''}" placeholder="Competitor B">
         </div>
       </div>
       <div class="setup-wc-meta">
@@ -216,11 +216,11 @@ function render(host, editorState) {
       <div class="form-row">
         <div>
           <label>Tournament title</label>
-          <input type="text" id="cfg-title" value="${escapeAttr(editorState.title)}">
+          <input type="text" id="cfg-title" value="${editorState.title ? escapeAttr(editorState.title) : ''}" placeholder="March Mammal Madness">
         </div>
         <div>
           <label>Subtitle (optional)</label>
-          <input type="text" id="cfg-subtitle" value="${escapeAttr(editorState.subtitle || '')}">
+          <input type="text" id="cfg-subtitle" value="${editorState.subtitle ? escapeAttr(editorState.subtitle) : ''}" placeholder="e.g. 2026 Classroom Pool">
         </div>
       </div>
 
@@ -239,7 +239,8 @@ function render(host, editorState) {
 
       <div class="actions" style="margin-top:1.25rem">
         <button type="button" class="btn btn-primary" id="saveConfigBtn">Save Tournament Setup</button>
-        <button type="button" class="btn btn-secondary" id="resetConfigBtn">Reset to Default</button>
+        <button type="button" class="btn btn-secondary" id="resetConfigBtn">Clear All Fields</button>
+        <button type="button" class="btn btn-secondary" id="exampleConfigBtn">Load Example Bracket</button>
       </div>
     </section>`;
 

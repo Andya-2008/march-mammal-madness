@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const store = require('./store');
-const { getDefaultConfig } = require('./data/default-config');
+const { getDefaultConfig, getBlankConfig } = require('./data/default-config');
 const {
   buildBracketFromConfig,
   validateConfigInput,
@@ -41,11 +41,13 @@ app.get('/api/settings', async (_req, res) => {
 
 app.get('/api/admin/tournament-config', async (req, res) => {
   if (!(await checkAdmin(req))) return res.status(401).json({ error: 'Unauthorized' });
-  const bundle = await getBracketBundle(store);
+  const saved = await store.getTournamentConfig();
+  const bundle = buildBracketFromConfig(saved || getBlankConfig());
   res.json({
     editor: bundle.configForEditor(),
     matchCount: bundle.matches.length,
     maxScore: bundle.maxScore,
+    isBlankTemplate: !saved,
   });
 });
 
@@ -75,10 +77,18 @@ app.post('/api/admin/tournament-config', async (req, res) => {
 
 app.post('/api/admin/tournament-config/reset', async (req, res) => {
   if (!(await checkAdmin(req))) return res.status(401).json({ error: 'Unauthorized' });
+  const config = getBlankConfig();
+  await store.saveTournamentConfig(config);
+  invalidateBracketCache();
+  res.json({ message: 'Cleared all fields.' });
+});
+
+app.post('/api/admin/tournament-config/example', async (req, res) => {
+  if (!(await checkAdmin(req))) return res.status(401).json({ error: 'Unauthorized' });
   const config = getDefaultConfig();
   await store.saveTournamentConfig(config);
   invalidateBracketCache();
-  res.json({ message: 'Reset to default tournament.' });
+  res.json({ message: 'Loaded example bracket (10th Annual).' });
 });
 
 app.post('/api/bracket/submit', async (req, res) => {

@@ -113,4 +113,51 @@ function getDefaultConfig() {
   };
 }
 
-module.exports = { getDefaultConfig, DIVISION_KEYS, STANDARD_PAIRING_SEEDS, teamId, standardPairings };
+/** Empty template for teachers copying a new bracket from online */
+function getBlankConfig() {
+  const divisionNames = { mc: '', qss: '', wna: '', wnb: '' };
+  const emptyNames = () => Array(16).fill('');
+
+  const divisions = {};
+  for (const key of DIVISION_KEYS) {
+    const teams = divisionTeams(key, emptyNames());
+    divisions[key] = {
+      name: divisionNames[key],
+      teams,
+      r1Pairings: STANDARD_PAIRING_SEEDS.map(([a, b]) => [a, b]),
+    };
+  }
+
+  return {
+    title: '',
+    subtitle: '',
+    roundPoints: {
+      wildcard: 1,
+      r1: 1,
+      r2: 2,
+      r3: 3,
+      r4: 5,
+      r5: 8,
+      championship: 13,
+    },
+    divisionOrder: DIVISION_KEYS,
+    divisions,
+    wildcard: {
+      enabled: true,
+      team1: { name: '' },
+      team2: { name: '' },
+      feedsDivision: 'wna',
+      feedsMatchIndex: 0,
+      feedsSlot: 'team2',
+    },
+  };
+}
+
+module.exports = {
+  getDefaultConfig,
+  getBlankConfig,
+  DIVISION_KEYS,
+  STANDARD_PAIRING_SEEDS,
+  teamId,
+  standardPairings,
+};

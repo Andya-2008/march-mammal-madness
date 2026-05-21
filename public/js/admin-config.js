@@ -32,15 +32,27 @@ async function loadEditor(adminFetch, container, onSaved) {
   });
 
   container.querySelector('#resetConfigBtn')?.addEventListener('click', async () => {
-    if (!confirm('Reset to the default tournament? This replaces all names and pairings.')) return;
+    if (!confirm('Clear every field on the setup bracket?')) return;
     const resetRes = await adminFetch('/api/admin/tournament-config/reset', { method: 'POST' });
     if (!resetRes.ok) {
       const d = await resetRes.json();
-      alert(d.error || 'Reset failed');
+      alert(d.error || 'Clear failed');
       return;
     }
     await loadEditor(adminFetch, container, onSaved);
-    alert('Reset to default tournament.');
+    alert('All fields cleared.');
+  });
+
+  container.querySelector('#exampleConfigBtn')?.addEventListener('click', async () => {
+    if (!confirm('Load the sample 10th Annual bracket? This will replace current setup.')) return;
+    const exRes = await adminFetch('/api/admin/tournament-config/example', { method: 'POST' });
+    if (!exRes.ok) {
+      const d = await exRes.json();
+      alert(d.error || 'Load failed');
+      return;
+    }
+    await loadEditor(adminFetch, container, onSaved);
+    alert('Example bracket loaded.');
   });
 }
 
