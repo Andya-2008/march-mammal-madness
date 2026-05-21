@@ -257,6 +257,15 @@ app.delete('/api/admin/student/:id', async (req, res) => {
   res.json({ message: 'Student deleted.' });
 });
 
+app.post('/api/admin/leaderboard/reset', async (req, res) => {
+  if (!(await checkAdmin(req))) return res.status(401).json({ error: 'Unauthorized' });
+  await store.clearAllStudents();
+  await store.clearActualResults();
+  res.json({
+    message: 'Leaderboard reset: all student brackets and actual results cleared.',
+  });
+});
+
 store
   .init()
   .then(() => {

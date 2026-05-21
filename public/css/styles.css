@@ -390,6 +390,31 @@ tr:hover td { background: var(--surface2); }
   max-width: 220px;
 }
 
+.leaderboard-toolbar-public {
+  align-items: center;
+}
+
+.live-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.leaderboard-board {
+  margin-top: 0;
+}
+
+.col-actions {
+  width: 6rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.btn-delete-student {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
 .leaderboard-date {
   color: var(--muted);
   margin-bottom: 1rem;
@@ -404,7 +429,7 @@ tr:hover td { background: var(--surface2); }
 
 @media print {
   body { background: white; color: black; margin: 0; }
-  header, nav, .no-print, .sticky-footer, #alert { display: none !important; }
+  header, nav, .no-print, .sticky-footer, #alert, .col-actions { display: none !important; }
   main { padding: 0; margin: 0; max-width: none; }
   .card {
     border: none;

@@ -195,6 +195,14 @@ async function deleteStudent(id) {
   await pool.query('DELETE FROM students WHERE id = $1', [id]);
 }
 
+async function clearAllStudents() {
+  await pool.query('DELETE FROM students');
+}
+
+async function clearActualResults() {
+  await pool.query('DELETE FROM actual_results WHERE id = 1');
+}
+
 async function getTournamentConfig() {
   const { rows } = await pool.query('SELECT config FROM tournament_config WHERE id = 1');
   if (!rows[0]) return null;
@@ -227,6 +235,8 @@ module.exports = {
   getAllBrackets,
   getAllBracketsForExport,
   deleteStudent,
+  clearAllStudents,
+  clearActualResults,
   getTournamentConfig,
   saveTournamentConfig,
   storageLabel: 'PostgreSQL (cloud)',

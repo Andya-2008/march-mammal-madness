@@ -9,10 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body>
-  <header class="no-print">
+<body class="leaderboard-public">
+  <header>
     <h1>Leaderboard</h1>
-    <p>Rankings based on actual March Mammal Madness results</p>
+    <p>Live class rankings — updates automatically</p>
     <nav class="top-nav">
       <a href="/">My Bracket</a>
       <a href="/leaderboard.html" class="nav-active">Leaderboard</a>
@@ -22,8 +22,8 @@
   <main>
     <div id="alert"></div>
 
-    <section class="card no-print">
-      <div class="leaderboard-toolbar">
+    <section class="card">
+      <div class="leaderboard-toolbar leaderboard-toolbar-public">
         <div class="leaderboard-filter">
           <label for="gradeFilter">Show rankings for</label>
           <select id="gradeFilter">
@@ -35,18 +35,14 @@
             <option value="Staff">Staff</option>
           </select>
         </div>
-        <div class="actions">
-          <button class="btn btn-primary" id="refreshBtn">Refresh Rankings</button>
-          <button class="btn btn-secondary" id="csvBtn" disabled>Download CSV</button>
-          <button class="btn btn-secondary" onclick="window.print()">Print Page</button>
-        </div>
+        <p class="live-hint">Refreshes every 30 seconds</p>
       </div>
     </section>
 
-    <section class="card" id="print-section">
+    <section class="card leaderboard-board" id="print-section">
       <h2 id="leaderboard-title">Leaderboard</h2>
       <p id="meta" class="leaderboard-date"></p>
-      <table>
+      <table class="leaderboard-table">
         <thead>
           <tr>
             <th>Rank</th>
@@ -60,6 +56,7 @@
     </section>
   </main>
 
+  <script src="/js/leaderboard-shared.js"></script>
   <script src="/js/leaderboard.js"></script>
 </body>
 </html>
