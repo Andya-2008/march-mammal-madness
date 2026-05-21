@@ -384,11 +384,20 @@ tr:hover td { background: var(--surface2); }
 }
 
 @media print {
-  body { background: white; color: black; }
-  header, nav, .no-print, .sticky-footer { display: none !important; }
-  .card { border: 1px solid #ccc; break-inside: avoid; }
-  #print-section .leaderboard-date { color: #444; }
-  #leaderboard-title { color: #b45309; }
+  body { background: white; color: black; margin: 0; }
+  header, nav, .no-print, .sticky-footer, #alert { display: none !important; }
+  main { padding: 0; margin: 0; max-width: none; }
+  .card {
+    border: none;
+    margin: 0;
+    padding: 0;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+  #print-section .leaderboard-date { color: #444; margin-bottom: 0.5rem; }
+  #leaderboard-title { color: #b45309; margin-top: 0; }
+  #print-section table { page-break-inside: auto; }
+  #print-section tr { break-inside: avoid; page-break-inside: avoid; }
   /* Do not repeat Rank/Name/Grade/Score on every printed page */
   #print-section thead {
     display: table-row-group;
