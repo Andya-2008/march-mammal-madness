@@ -35,7 +35,13 @@ async function reloadBracketData() {
 }
 
 function onActualPick(matchId, teamId) {
-  actualPicks[matchId] = teamId;
+  if (teamId && actualPicks[matchId] === teamId) {
+    delete actualPicks[matchId];
+  } else if (teamId) {
+    actualPicks[matchId] = teamId;
+  } else {
+    delete actualPicks[matchId];
+  }
   BracketUI.clearDownstreamPicks(matchId, actualPicks, bracketData.matches);
   renderAllAdminViews();
 }
@@ -49,6 +55,7 @@ function renderAdminVisual() {
   if (!visualHost || !bracketData) return;
   BracketVisual.render(visualHost, bracketData, actualPicks, {
     heading: 'Actual Results — click winners',
+    subtitle: 'Click a competitor to select · Click again to deselect · Red = selected',
     onPick: onActualPick,
   });
   const entered = Object.keys(actualPicks).filter((k) => actualPicks[k]).length;
@@ -66,7 +73,9 @@ function renderAdminBracket() {
     card.className = 'card';
     card.innerHTML = `<h2>${title}</h2>`;
     for (const m of matchList) {
-      card.appendChild(BracketUI.renderMatchCard(m, actualPicks, teams, onActualPick));
+      card.appendChild(
+        BracketUI.renderMatchCard(m, actualPicks, teams, onActualPick, { allowDeselect: true })
+      );
     }
     container.appendChild(card);
   }

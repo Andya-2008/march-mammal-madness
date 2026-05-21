@@ -210,6 +210,7 @@ function render(container, bracketData, picks, options = {}) {
         const teamId = line.dataset.pickTeam;
         if (matchId && teamId) pickOpts.onPick(matchId, teamId);
       });
+      line.title = 'Click to select; click again to deselect';
       line.addEventListener('keydown', (ev) => {
         if (ev.key === 'Enter' || ev.key === ' ') {
           ev.preventDefault();

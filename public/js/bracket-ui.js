@@ -36,7 +36,7 @@ function isMatchReadyClient(match, picks) {
   return resolveParticipantsClient(match, picks)?.length === 2;
 }
 
-function renderMatchCard(match, picks, teams, onPick) {
+function renderMatchCard(match, picks, teams, onPick, options = {}) {
   const participants = resolveParticipantsClient(match, picks, teams);
   const ready = participants?.length === 2;
   const div = document.createElement('div');
@@ -68,7 +68,18 @@ function renderMatchCard(match, picks, teams, onPick) {
     input.name = match.id;
     input.value = teamId;
     input.checked = picks[match.id] === teamId;
-    input.addEventListener('change', () => onPick(match.id, teamId));
+
+    if (options.allowDeselect) {
+      input.addEventListener('click', (e) => {
+        if (picks[match.id] === teamId) {
+          e.preventDefault();
+          onPick(match.id, null);
+        }
+      });
+    }
+    input.addEventListener('change', () => {
+      if (input.checked) onPick(match.id, teamId);
+    });
 
     const seedSpan = document.createElement('span');
     seedSpan.className = 'seed';
