@@ -36,7 +36,6 @@ function slotForMatch(match, slot, picks, teams) {
 }
 
 function teamLine(team, isWinner, matchId, pickOpts) {
-  const gBtn = window.GoogleSearch?.googleSearchButton(team.name) || '';
   const clickable =
     pickOpts?.onPick && team.id && team.name !== 'TBD' && matchId
       ? ' mmm-line-clickable'
@@ -49,7 +48,6 @@ function teamLine(team, isWinner, matchId, pickOpts) {
     <div class="mmm-line ${isWinner ? 'mmm-winner' : ''}${clickable}" data-match-id="${matchId || ''}"${dataPick} role="${clickable ? 'button' : 'none'}" tabindex="${clickable ? '0' : '-1'}">
       <span class="mmm-seed">${escapeHtml(String(team.seed))}</span>
       <span class="mmm-name">${escapeHtml(team.name)}</span>
-      ${gBtn}
     </div>`;
 }
 
@@ -200,12 +198,9 @@ function render(container, bracketData, picks, options = {}) {
       </div>
     </section>`;
 
-  if (window.GoogleSearch) GoogleSearch.bindGoogleButtons(container);
-
   if (pickOpts?.onPick) {
     container.querySelectorAll('.mmm-line-clickable').forEach((line) => {
-      line.addEventListener('click', (ev) => {
-        if (ev.target.closest('.btn-google')) return;
+      line.addEventListener('click', () => {
         const matchId = line.dataset.pickMatch;
         const teamId = line.dataset.pickTeam;
         if (matchId && teamId) pickOpts.onPick(matchId, teamId);

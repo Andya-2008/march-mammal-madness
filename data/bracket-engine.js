@@ -337,11 +337,7 @@ function validateConfigInput(raw) {
     }
   }
 
-  if (raw.wildcard?.enabled) {
-    if (!raw.wildcard.team1?.name?.trim() || !raw.wildcard.team2?.name?.trim()) {
-      errors.push('Wild Card: both competitor names required.');
-    }
-  }
+  // Wild card names may be left empty until teachers fill them in from the official bracket.
 
   return errors;
 }
