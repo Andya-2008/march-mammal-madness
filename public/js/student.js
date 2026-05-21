@@ -105,8 +105,25 @@ function renderBracket() {
     ? 'Ready to submit!'
     : `Pick winners for all unlocked matches (${pickedCount}/${total})`;
 
-  if (visualHost) {
+  renderVisualBracket();
+}
+
+function renderVisualBracket() {
+  if (!visualHost) return;
+  try {
+    if (typeof BracketVisual === 'undefined') {
+      visualHost.innerHTML =
+        '<div class="alert alert-error">Bracket viewer did not load. Press Ctrl+F5 to hard refresh.</div>';
+      return;
+    }
     BracketVisual.render(visualHost, bracketData, picks);
+    if (!visualHost.querySelector('.mmm-sheet')) {
+      visualHost.innerHTML =
+        '<div class="alert alert-error">Could not draw bracket. Check the browser console or try refreshing.</div>';
+    }
+  } catch (err) {
+    console.error('BracketVisual error:', err);
+    visualHost.innerHTML = `<div class="alert alert-error">Bracket error: ${err.message}</div>`;
   }
 }
 

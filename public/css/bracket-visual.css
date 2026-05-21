@@ -1,9 +1,26 @@
 /* Classic March Mammal Madness print-style bracket */
 
+.visual-bracket-wrapper {
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+  border: 2px solid var(--accent) !important;
+  scroll-margin-top: 1rem;
+}
+
+.visual-bracket-loading {
+  color: var(--muted);
+  text-align: center;
+  padding: 2rem;
+}
+
+#visual-bracket {
+  min-height: 200px;
+}
+
 .mmm-sheet-section {
-  margin: 2.5rem 0 6rem;
-  padding-top: 1.5rem;
-  border-top: 3px solid var(--accent);
+  margin: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 .mmm-sheet-heading {

@@ -59,17 +59,27 @@
       <p id="progressText" style="font-size:0.85rem;color:var(--muted)">0 of 64 matches picked</p>
     </section>
 
-    <div id="visual-bracket"></div>
-
     <section class="card">
       <h2>Pick Winners (match by match)</h2>
       <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">
-        Choose a winner for each match below. The full bracket above updates as you go.
-        Click <strong>⌕</strong> next to any name to search Google.
+        Choose a winner for each match below. When you are done, scroll down to the
+        <strong>full bracket preview</strong> at the bottom. Click <strong>⌕</strong> to search Google.
       </p>
     </section>
 
     <div id="bracket-container"></div>
+
+    <section class="visual-bracket-wrapper card" id="full-bracket-section">
+      <h2 style="color:var(--accent);font-size:1.35rem">Full Bracket Preview</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem">
+        This is the tournament tree (like the official March Mammal Madness poster).
+        Your picks appear in <span style="color:#c0392b;font-weight:700">red</span>.
+        Scroll <strong>left/right</strong> if the bracket is wider than your screen.
+      </p>
+      <div id="visual-bracket">
+        <p class="visual-bracket-loading">Loading full bracket…</p>
+      </div>
+    </section>
 
     <div class="sticky-footer no-print">
       <span id="footerStatus">Pick all 64 match winners to submit</span>
