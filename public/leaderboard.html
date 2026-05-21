@@ -23,10 +23,23 @@
     <div id="alert"></div>
 
     <section class="card no-print">
-      <div class="actions">
-        <button class="btn btn-primary" id="refreshBtn">Refresh Rankings</button>
-        <button class="btn btn-secondary" id="csvBtn" disabled>Download CSV</button>
-        <button class="btn btn-secondary" onclick="window.print()">Print Page</button>
+      <div class="leaderboard-toolbar">
+        <div class="leaderboard-filter">
+          <label for="gradeFilter">Show rankings for</label>
+          <select id="gradeFilter">
+            <option value="">Everyone</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+            <option value="Staff">Staff</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="refreshBtn">Refresh Rankings</button>
+          <button class="btn btn-secondary" id="csvBtn" disabled>Download CSV</button>
+          <button class="btn btn-secondary" onclick="window.print()">Print Page</button>
+        </div>
       </div>
     </section>
 

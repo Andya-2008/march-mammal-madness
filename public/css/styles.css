@@ -371,6 +371,25 @@ tr:hover td { background: var(--surface2); }
   font-size: 0.8rem;
 }
 
+.leaderboard-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.leaderboard-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 200px;
+}
+
+.leaderboard-filter select {
+  max-width: 220px;
+}
+
 .leaderboard-date {
   color: var(--muted);
   margin-bottom: 1rem;

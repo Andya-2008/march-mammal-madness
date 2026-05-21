@@ -1,4 +1,5 @@
 let leaderboardData = null;
+let gradeFilter = '';
 
 function formatLeaderboardDate(d = new Date()) {
   return d.toLocaleDateString(undefined, {
@@ -8,10 +9,47 @@ function formatLeaderboardDate(d = new Date()) {
   });
 }
 
+function studentGrade(row) {
+  return (row.period || row.grade || '').trim();
+}
+
+function filterLabel() {
+  if (!gradeFilter) return 'Everyone';
+  if (gradeFilter === 'Staff') return 'Staff';
+  return `Grade ${gradeFilter}`;
+}
+
+function applyGradeFilter(rows) {
+  if (!gradeFilter) return rows;
+  return rows.filter((r) => studentGrade(r) === gradeFilter);
+}
+
+function rerankFiltered(rows) {
+  const sorted = [...rows].sort(
+    (a, b) => b.score - a.score || (a.lastName || '').localeCompare(b.lastName || '')
+  );
+  let rank = 0;
+  let prevScore = null;
+  return sorted.map((entry, i) => {
+    if (entry.score !== prevScore) {
+      rank = i + 1;
+      prevScore = entry.score;
+    }
+    return { ...entry, rank };
+  });
+}
+
+function getFilteredRows() {
+  if (!leaderboardData?.leaderboard) return [];
+  return rerankFiltered(applyGradeFilter(leaderboardData.leaderboard));
+}
+
 const alertEl = document.getElementById('alert');
 const tbody = document.getElementById('leaderboard-body');
 const meta = document.getElementById('meta');
 const csvBtn = document.getElementById('csvBtn');
+const gradeFilterEl = document.getElementById('gradeFilter');
+const leaderboardTitle = document.getElementById('leaderboard-title');
 
 function showAlert(msg, type = 'error') {
   alertEl.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
@@ -29,36 +67,54 @@ function csvCell(value) {
   return s;
 }
 
-function renderTable(data) {
+function updateHeader() {
+  const label = filterLabel();
+  leaderboardTitle.textContent = gradeFilter ? `Leaderboard — ${label}` : 'Leaderboard';
+  meta.textContent = `${formatLeaderboardDate()} · ${label}`;
+}
+
+function renderTable() {
+  const rows = getFilteredRows();
   tbody.innerHTML = '';
-  if (!data.leaderboard.length) {
+
+  if (!leaderboardData?.leaderboard?.length) {
     tbody.innerHTML = '<tr><td colspan="4">No submissions yet.</td></tr>';
     if (csvBtn) csvBtn.disabled = true;
+    updateHeader();
     return;
   }
 
-  for (const row of data.leaderboard) {
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="4">No students in ${escapeHtml(filterLabel())}.</td></tr>`;
+    if (csvBtn) csvBtn.disabled = true;
+    updateHeader();
+    return;
+  }
+
+  for (const row of rows) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td><span class="rank-badge">${row.rank}</span></td>
       <td>${escapeHtml(row.name)}</td>
-      <td>${escapeHtml(row.period || row.grade || '—')}</td>
+      <td>${escapeHtml(studentGrade(row) || '—')}</td>
       <td><strong>${row.score}</strong></td>
     `;
     tbody.appendChild(tr);
   }
 
-  meta.textContent = formatLeaderboardDate();
+  updateHeader();
   if (csvBtn) csvBtn.disabled = false;
 }
 
 function downloadCsv() {
-  if (!leaderboardData?.leaderboard?.length) return;
+  const rows = getFilteredRows();
+  if (!rows.length) return;
 
+  const slug = gradeFilter ? `-${gradeFilter.toLowerCase()}` : '';
   const lines = [
     ['Rank', 'Name', 'Grade', 'Score'].map(csvCell).join(','),
-    ...leaderboardData.leaderboard.map((r) =>
-      [r.rank, r.name, r.period || r.grade || '', r.score].map(csvCell).join(',')
+    ...rows.map((r) =>
+      [r.rank, r.name, studentGrade(r), r.score].map(csvCell).join(',')
     ),
   ];
 
@@ -66,7 +122,7 @@ function downloadCsv() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `leaderboard-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `leaderboard${slug}-${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -79,7 +135,7 @@ async function loadLeaderboard() {
     if (!res.ok) throw new Error(data.error);
 
     leaderboardData = data;
-    renderTable(data);
+    renderTable();
     alertEl.innerHTML = '';
   } catch (e) {
     leaderboardData = null;
@@ -90,5 +146,9 @@ async function loadLeaderboard() {
 
 document.getElementById('refreshBtn').addEventListener('click', loadLeaderboard);
 csvBtn?.addEventListener('click', downloadCsv);
+gradeFilterEl?.addEventListener('change', () => {
+  gradeFilter = gradeFilterEl.value;
+  renderTable();
+});
 
 loadLeaderboard();
