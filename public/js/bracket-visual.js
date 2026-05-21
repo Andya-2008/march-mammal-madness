@@ -1,6 +1,8 @@
 /** Classic March Mammal Madness bracket (print-style tree) */
 
-const WC = '__wild_card_winner__';
+function wc() {
+  return window.BracketUI?.WC || '__wild_card_winner__';
+}
 
 function escapeHtml(s) {
   const d = document.createElement('div');
@@ -9,7 +11,7 @@ function escapeHtml(s) {
 }
 
 function teamDisplay(teamId, teams, picks) {
-  if (teamId === WC) {
+  if (teamId === wc()) {
     const w = picks?.wildcard;
     if (w && teams[w]) return { name: teams[w].name, seed: 'WC', id: w };
     return { name: 'Wild Card Winner', seed: '—', id: null };
@@ -21,6 +23,7 @@ function teamDisplay(teamId, teams, picks) {
 
 function slotForMatch(match, slot, picks, teams) {
   const tid = slot === 'team1' ? match.team1 : match.team2;
+  const WC = wc();
   if (tid && tid !== WC) return teamDisplay(tid, teams, picks);
   if (tid === WC) return teamDisplay(WC, teams, picks);
   if (match.requires) {

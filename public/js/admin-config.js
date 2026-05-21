@@ -1,6 +1,8 @@
 /** Teacher tournament setup — divisions, seeds, R1 pairings */
 
-const WC = '__wild_card_winner__';
+function wc() {
+  return window.BracketUI?.WC || '__wild_card_winner__';
+}
 const DIV_KEYS = ['mc', 'qss', 'wna', 'wnb'];
 const STANDARD = [
   [1, 16], [8, 9], [5, 12], [4, 13], [6, 11], [3, 14], [7, 10], [2, 15],
@@ -13,7 +15,7 @@ function seedOptions(divKey, includeWc) {
   for (let s = 1; s <= 16; s++) {
     opts += `<option value="${s}">${s}</option>`;
   }
-  if (includeWc) opts += `<option value="${WC}">Wild Card Winner</option>`;
+  if (includeWc) opts += `<option value="${wc()}">Wild Card Winner</option>`;
   return opts;
 }
 
@@ -147,8 +149,9 @@ function seedOptionList(selected, divKey, allowWc) {
     html += `<option value="${s}" ${sel}>Seed ${s}</option>`;
   }
   if (allowWc) {
-    const sel = selected === WC ? 'selected' : '';
-    html += `<option value="${WC}" ${sel}>Wild Card Winner</option>`;
+    const wild = wc();
+    const sel = selected === wild ? 'selected' : '';
+    html += `<option value="${wild}" ${sel}>Wild Card Winner</option>`;
   }
   return html;
 }
@@ -196,7 +199,8 @@ function collectEditorFromDom() {
     const key = sel.dataset.div;
     const mi = parseInt(sel.dataset.match, 10);
     const slot = parseInt(sel.dataset.slot, 10);
-    const val = sel.value === WC ? WC : parseInt(sel.value, 10);
+    const wild = wc();
+    const val = sel.value === wild ? wild : parseInt(sel.value, 10);
     if (!e.divisions[key].r1Pairings) e.divisions[key].r1Pairings = STANDARD.map((p) => [...p]);
     e.divisions[key].r1Pairings[mi][slot] = val;
   });
@@ -212,7 +216,7 @@ function bindEditorEvents(container) {
       if (editorState.wildcard?.enabled && editorState.wildcard.feedsDivision === key) {
         const mi = editorState.wildcard.feedsMatchIndex ?? 0;
         const slot = editorState.wildcard.feedsSlot === 'team1' ? 0 : 1;
-        editorState.divisions[key].r1Pairings[mi][slot] = WC;
+        editorState.divisions[key].r1Pairings[mi][slot] = wc();
       }
       renderEditor(container);
     });
