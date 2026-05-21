@@ -24,7 +24,7 @@ Wild Card: 1 · Round 1: 1 each · Sweet 16: 2 · Elite Trait: 3 · Final Roar: 
 
 ## Local development (optional)
 
-Requires a Postgres database (use the same free Neon URL as production):
+Use the same Neon `DATABASE_URL` as production:
 
 ```powershell
 $env:DATABASE_URL="postgresql://..."
@@ -32,8 +32,6 @@ $env:ADMIN_PASSWORD="mmm2026"
 npm install
 npm start
 ```
-
-Without `DATABASE_URL`, `npm install` installs SQLite for offline testing only.
 
 ## Updating teams for a new year
 

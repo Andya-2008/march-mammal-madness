@@ -47,7 +47,7 @@ Keep this string secret — it is the database password.
 4. Settings:
    - **Name:** `march-mammal-madness` (this becomes part of your URL)
    - **Runtime:** Node
-   - **Build Command:** `npm install`
+   - **Build Command:** `npm install --omit=dev`
    - **Start Command:** `npm start`
    - **Instance type:** Free
 5. **Environment Variables** (click Add):
@@ -102,7 +102,8 @@ Render redeploys automatically in a few minutes.
 
 | Problem | Fix |
 |---------|-----|
-| Deploy failed on `better-sqlite3` | Make sure `DATABASE_URL` is set on Render — production should use Postgres, not SQLite. |
+| Build failed on `npm install` | Use build command `npm install --omit=dev`. Push the latest code from this repo (no `better-sqlite3`). |
+| Deploy failed on `better-sqlite3` | Remove native SQLite deps; cloud uses Postgres only. Set `DATABASE_URL` on Render. |
 | “Actual results not entered” on leaderboard | Teacher must save at least one winner in Admin first. |
 | Students can’t connect | Check the URL uses `https://`. School filters sometimes block new domains — ask IT to allow your Render URL. |
 | Lost admin password | Render Dashboard → your service → **Environment** → change `ADMIN_PASSWORD` → redeploy. |
